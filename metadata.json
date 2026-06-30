@@ -1,0 +1,37 @@
+{
+  "team_id": "samuelk-agri-advisor",
+  "domain": "agriculture",
+  "language_scope": ["en", "pcm"],
+  "african_alpha_claim": true,
+  "budget_laptop_claim": true,
+  "submitter": {
+    "name": "Samuel",
+    "email": "samuel.kwuelum@gmail.com",
+    "github_handle": "iamsamuelk"
+  },
+  "cross_disciplinary_pairing": {
+    "discipline": "agriculture",
+    "load_bearing": true,
+    "description": "An offline crop, livestock, and market advisory assistant for Nigerian smallholder farmers. Combines a quantized instruct LLM with a curated RAG layer of Nigerian agriculture data (crop calendars, pest/disease identification, market terminology) and a structured Igbo glossary for key farming terms, so farmers can get accurate guidance in plain English or Nigerian Pidgin while retaining recognizable local vocabulary, with zero internet dependency."
+  },
+  "test_prompts": [
+    {
+      "prompt_id": "tp_001",
+      "prompt": "My cassava leaves are turning yellow and curling at the edges. What could be wrong and what should I do?"
+    },
+    {
+      "prompt_id": "tp_002",
+      "prompt": "I dey plant maize for Imo State. Wetin be the best time to plant am, and how I go take protect am from pest?"
+    }
+  ],
+  "model": {
+    "name": "Qwen2.5-1.5B-Instruct-Q4_K_M",
+    "runtime": "llama.cpp",
+    "quantization": "GGUF Q4_K_M",
+    "parameters_estimate": "1.5B",
+    "packaging": "binary_bundle"
+  },
+  "_runtime": {
+    "model_path": "model/qwen2.5-1.5b-instruct-q4_k_m.gguf"
+  }
+}
