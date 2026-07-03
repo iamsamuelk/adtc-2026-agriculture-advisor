@@ -1,0 +1,57 @@
+{
+  "crops": {
+    "cassava": "ákárá ji",
+    "yam": "ji",
+    "maize": "ọka",
+    "corn": "ọka",
+    "rice": "osikapa",
+    "groundnut": "ahụ̀eke",
+    "cowpea": "agwa",
+    "plantain": "ogede",
+    "banana": "unere",
+    "palm oil": "mmanụ nri",
+    "palm tree": "ngwo",
+    "fluted pumpkin": "ugu",
+    "sorghum": "ọka ijì",
+    "sweet potato": "ji abana",
+    "garden egg": "anara",
+    "pepper": "ose",
+    "tomato": "tomato",
+    "okra": "okwuru"
+  },
+  "farming_terms": {
+    "farm": "ọhịa ọrụ",
+    "soil": "ala",
+    "fertilizer": "nri ala",
+    "compost": "ihe ọkụkụ ochie",
+    "seed": "mkpụrụ",
+    "harvest": "ịkọ ihe ọkụkụ",
+    "planting": "ịkụ ọkụkụ",
+    "rainy season": "oge ozuzo",
+    "dry season": "oge ọchịchọ",
+    "planting season": "oge ịkụ ọka",
+    "pest": "ọrịa ọkụkụ",
+    "disease": "ọrịa",
+    "weed": "ahịhịa ojoo",
+    "irrigation": "ịkọ mmiri",
+    "crop rotation": "ịgbanwe ọkụkụ",
+    "yield": "ihe ọkụkụ sitere",
+    "farmer": "ọchịchọ ala"
+  },
+  "pests_diseases": {
+    "fall armyworm": "ọ̀gọ̀rọ̀ ọka",
+    "stem borer": "ọrịa osisi",
+    "root rot": "ire mgbọ",
+    "leaf blight": "ọrịa akwụkwọ",
+    "cassava mosaic": "ọrịa ákárá ji",
+    "aphids": "anụ obere ojoo"
+  },
+  "advisory_phrases": {
+    "your farm": "ọhịa ọrụ gị",
+    "this season": "oge a",
+    "next season": "oge ọzọ",
+    "good harvest": "ihe ọkụkụ ọma",
+    "healthy soil": "ala dị mma",
+    "wood ash": "ntu osisi"
+  }
+}
