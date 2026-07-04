@@ -17,11 +17,11 @@
   "test_prompts": [
     {
       "prompt_id": "tp_001",
-      "prompt": "My cassava leaves are turning yellow and curling at the edges. What could be wrong and what should I do?"
+      "prompt": "My cassava leaves are turning yellow and curling at the edges. Some plants also have brown patches on the stem near the ground. What could be wrong and what should I do before it spreads to the rest of my farm?"
     },
     {
       "prompt_id": "tp_002",
-      "prompt": "I dey plant maize for Imo State. Wetin be the best time to plant am, and how I go take protect am from pest?"
+      "prompt": "I dey farm maize for Imo State and e don reach time to plant. But I hear say fall armyworm dey cause serious problem for farmers nearby. How I go take protect my farm before the pest reach me, and wetin I go do if I see am early?"
     }
   ],
   "model": {
