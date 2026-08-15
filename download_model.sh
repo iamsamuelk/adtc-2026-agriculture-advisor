@@ -4,7 +4,10 @@
 
 set -euo pipefail
 
-MODEL_DIR="model"
+# Anchor to this script's own directory so it works no matter what
+# directory the sandbox/orchestrator invokes it from.
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MODEL_DIR="$HERE/model"
 MODEL_FILE="qwen2.5-1.5b-instruct-q4_k_m.gguf"
 MODEL_PATH="${MODEL_DIR}/${MODEL_FILE}"
 
@@ -19,6 +22,10 @@ if [ -f "${MODEL_PATH}" ]; then
 fi
 
 echo "Downloading model to ${MODEL_PATH}..."
-curl -L --fail --retry 3 -o "${MODEL_PATH}" "${MODEL_URL}"
+# Download to a .partial file first, then move into place atomically.
+# If curl dies mid-download, no corrupted file is left at MODEL_PATH,
+# so the idempotency check above can't be fooled into "skipping" a broken file.
+curl -L --fail --retry 3 --http1.1 -C - -o "${MODEL_PATH}.partial" "${MODEL_URL}"
+mv "${MODEL_PATH}.partial" "${MODEL_PATH}"
 
 echo "Download complete: ${MODEL_PATH}"
