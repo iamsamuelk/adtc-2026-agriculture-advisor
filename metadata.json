@@ -25,13 +25,13 @@
     }
   ],
   "model": {
-    "name": "Qwen2.5-1.5B-Instruct-Q4_K_M",
+    "name": "Qwen2.5-1.5B-Instruct-Q4_K_M-Persona",
     "runtime": "llama.cpp",
     "quantization": "GGUF Q4_K_M",
     "parameters_estimate": "1.5B",
     "packaging": "binary_bundle"
   },
   "_runtime": {
-    "model_path": "model/qwen2.5-1.5b-instruct-q4_k_m.gguf"
+    "model_path": "model/qwen2.5-1.5b-instruct-q4_k_m-persona.gguf"
   }
 }

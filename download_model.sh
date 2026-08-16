@@ -8,11 +8,11 @@ set -euo pipefail
 # directory the sandbox/orchestrator invokes it from.
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MODEL_DIR="$HERE/model"
-MODEL_FILE="qwen2.5-1.5b-instruct-q4_k_m.gguf"
+MODEL_FILE="qwen2.5-1.5b-instruct-q4_k_m-persona.gguf"
 MODEL_PATH="${MODEL_DIR}/${MODEL_FILE}"
 
 # Public Hugging Face URL for the quantized model.
-MODEL_URL="https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/qwen2.5-1.5b-instruct-q4_k_m.gguf"
+MODEL_URL="https://huggingface.co/iamsamuelk/adtc-2026-agri-advisor-qwen1.5b-persona/resolve/main/qwen2.5-1.5b-instruct-q4_k_m-persona.gguf"
 
 mkdir -p "${MODEL_DIR}"
 
