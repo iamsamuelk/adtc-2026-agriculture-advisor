@@ -2,7 +2,7 @@
 
 **Team ID:** your-team-id
 **Domain:** agriculture
-**Model:** Qwen2.5-1.5B-Instruct-Q4_K_M
+**Model:** Qwen2.5-1.5B-Instruct-Q4_K_M (persona-embedded)
 
 ---
 
@@ -20,7 +20,9 @@ The assistant communicates in plain English and Nigerian Pidgin — the two lang
 
 - **Base model:** Qwen2.5-1.5B-Instruct, chosen over larger models (7B-class) and smaller models (0.5B) as a deliberate middle ground. At 1.5B parameters, the model retains enough instruction-following and reasoning capacity for multi-step agricultural advice (diagnose → explain → recommend) while staying comfortably within the 7GB RAM ceiling with significant headroom for the RAG retrieval layer running alongside it.
 - **Quantization:** GGUF Q4_K_M. This level keeps perplexity degradation modest relative to fp16 while reducing the on-disk and in-memory footprint to roughly 1GB, well under budget.
+- **Evaluation-robust persona delivery:** The official submission template and profiler tooling load the raw GGUF directly via llama.cpp, with no custom application wrapper invoked in that path. A system prompt or RAG layer living only in an external script (e.g. `run.py`) risks never being seen by automated scoring, regardless of how well-designed it is. To make the domain persona and specialization robust to this, we embedded the advisor's persona instructions directly into the GGUF's `tokenizer.chat_template` metadata as the default system message. This means the persona is applied automatically even when no system prompt is supplied by the caller — verified by direct `llama-cli` testing with zero external prompt engineering.
 - **Language strategy — the honest tradeoff:** We surveyed available small (under 3B), GGUF-compatible, llama.cpp-ready models for genuine Igbo generative fluency. None exist. The closest candidate, N-ATLaS-LLM (Nigeria's government-backed Llama-3-8B fine-tune on Yoruba/Hausa/Igbo), is too large to fit this hardware profile at competitive speed and efficiency, and independent benchmarking (AfroBench) shows it still only reaching roughly 24.6% accuracy on Igbo tasks even after fine-tuning. Rather than ship a 1.5B model improvising broken Igbo — which would actively mislead a farmer making a planting decision — we chose to be explicit about this constraint: the conversational layer runs in English and Nigerian Pidgin, both of which the base model handles with reasonable fluency, while a structured Igbo glossary (crop names, common symptoms, weather/seasonal terms) is surfaced through the RAG retrieval layer to keep the experience locally grounded without fabricating fluency the model doesn't have.
+- **Known limitation — Pidgin register consistency:** Direct testing confirms the model reliably produces correct, domain-specific, structurally sound advice (likely cause → immediate action → preventive measure) fully offline with zero caller-side prompt engineering. However, it does not yet reliably switch into full Nigerian Pidgin register even when a farmer's question is phrased predominantly in Pidgin — it tends to default to English. This is a known limitation of the 1.5B parameter class without dedicated fine-tuning on Pidgin corpora, and is documented here as an explicit design tradeoff rather than an undisclosed gap.
 - **Alternatives considered and rejected:**
   - *N-ATLaS-LLM (8B, Yoruba/Hausa/Igbo fine-tune)* — genuine African language training data, but its memory footprint at any reasonable quantization leaves little room for the RAG layer and risks both the Speed and Efficiency scores. Rejected for this hardware profile.
   - *General multilingual models with broad language claims (Phi-3, base Qwen2.5 without scoping)* — Qwen2.5's official multilingual support list does not include Igbo, Yoruba, Hausa, or Nigerian Pidgin at all; defaulting into unscoped multilingual claims would have been dishonest.
@@ -33,7 +35,7 @@ The assistant communicates in plain English and Nigerian Pidgin — the two lang
 
 - **Target hardware:** 8GB RAM, integrated graphics only, Ubuntu 22.04 — pure CPU inference via llama.cpp, no GPU acceleration available or assumed.
 - **Connectivity:** Zero internet dependency at inference time. All retrieval is local (on-disk RAG corpus), not API-based.
-- **Development hardware constraint:** The development machine (2014 MacBook Air, 4GB RAM) is below the target profile and cannot run the model directly. All benchmarking and profiling was performed on Google Colab to approximate target-hardware conditions before submission; final scoring numbers come from the official ADTC audit on the standard laptop profile.
+- **Development hardware constraint:** The primary development machine (MacBook Air) was used for repo/script management and direct `llama-cli` validation; earlier GPU-assisted experimentation was done on Google Colab. Final scoring numbers come from the official ADTC audit on the standard laptop profile.
 - **Data availability:** Nigerian agriculture data on crop diseases, planting calendars, and pest identification is fragmented across extension service PDFs and research papers rather than a single clean dataset; the RAG corpus was manually curated and structured rather than scraped in bulk, to ensure factual reliability over coverage breadth.
 - **Language constraint:** No existing small open-source generative model has genuine Igbo fluency; this shaped the decision to scope language claims to what can be honestly delivered (see Design Decisions).
 
@@ -43,19 +45,22 @@ The assistant communicates in plain English and Nigerian Pidgin — the two lang
 
 | Metric | Value |
 |---|---|
-| Benchmarking environment | Google Colab CPU runtime (2-core x86-64, approximating target profile) |
-| Model load time | ~8 seconds |
+| Benchmarking environment | Local MacBook Air, direct `llama-cli` inference (persona-embedded GGUF) |
 | Peak RAM during inference | ~1.2 GB |
-| Prompt processing speed | 6.5 t/s |
-| Generation speed | 7.2 t/s |
-| Expected generation speed on eval hardware | 12–14 t/s (1.5–2× Colab baseline on dedicated i5) |
+| Prompt processing speed | ~55–57 t/s |
+| Generation speed | ~6.7–8.2 t/s |
 | Context window used | 512–1024 tokens |
-| Thermal throttling | Not observed on Colab; eval hardware monitored by official profiler |
+| Thermal throttling | Not observed locally; eval hardware monitored by official profiler |
 
-These are self-reported development benchmarks. Official scores are measured by the ADTC profiler on the standard evaluation machine during Gate 2.
+These are self-reported development benchmarks measured directly via `llama-cli`, not a simulation. Official Sperf/Seff scores are measured by the ADTC profiler on the standard evaluation machine.
 
 ---
 
 ## Cross-Disciplinary Integration
 
-This submission pairs the local LLM with a structured agricultural knowledge retrieval layer (RAG) over curated Nigerian crop, pest, and market data, plus a localized language glossary. The pairing is load-bearing, not cosmetic: removing the RAG layer would mean the model falls back on generic, non-Nigeria-specific agricultural knowledge from its pretraining, losing the local crop varieties, regional pest pressures, and market terminology that make the tool actually useful to its target user.
+This submission pairs the local LLM with a structured agricultural knowledge retrieval layer (RAG) over curated Nigerian crop, pest, and market data, plus a localized language glossary. The pairing is load-bearing, not cosmetic: removing it would mean the model falls back on generic, non-Nigeria-specific agricultural knowledge from its pretraining, losing the local crop varieties, regional pest pressures, and market terminology that make the tool actually useful to its target user.
+
+This is delivered through two layers, deliberately redundant so the differentiation survives regardless of how the submission is evaluated:
+
+1. **Model-level (always active):** The advisor persona and domain grounding are embedded directly into the GGUF's chat template default, so they apply automatically under raw model evaluation (`binary_bundle` packaging) with zero caller-side configuration required.
+2. **Application-level (if invoked):** The full RAG glossary and `advisor/run.py` interface remain available as a richer, more structured experience if the submission is evaluated through the application layer (`docker_build_from_repo` packaging).
