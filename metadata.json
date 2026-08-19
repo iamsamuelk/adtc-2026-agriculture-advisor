@@ -28,7 +28,7 @@
     "name": "Qwen2.5-1.5B-Instruct-Q4_K_M-Persona",
     "runtime": "llama.cpp",
     "quantization": "GGUF Q4_K_M",
-    "parameters_estimate": "1.5B",
+    "parameters_estimate": "1.8B",
     "packaging": "binary_bundle"
   },
   "_runtime": {
